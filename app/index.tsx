@@ -1,5 +1,5 @@
 import { ToDoTask } from "@/components/Task";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -9,26 +9,64 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const [task, setTask] = useState<string>();
-  const [taskItems, setTaskItems] = useState([]);
+  const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
+
+  useEffect(() => {
+    // Load tasks from storage when the component mounts
+    const loadTasks = async () => {
+      const tasks = await loadTasksFromStorage();
+      setTaskItems(tasks);
+    };
+    loadTasks();
+  }, []);
+
+  useEffect(() => {
+    // Save tasks to storage whenever taskItems changes
+    saveTasksToStorage(taskItems);
+  }, [taskItems]);
+
+  const saveTasksToStorage = async (tasks: TaskItem[]) => {
+    try {
+      const jsonValue = JSON.stringify(tasks);
+      await AsyncStorage.setItem("taskItems", jsonValue);
+    } catch (e) {
+      console.error("Failed to save tasks to storage:", e);
+    }
+  };
+
+  const loadTasksFromStorage = async (): Promise<TaskItem[]> => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("taskItems");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (e) {
+      console.error("Failed to load tasks from storage:", e);
+      return [];
+    }
+  };
 
   const handleAddTask = () => {
     setTaskItems([...taskItems, task]);
-    setTask(null);
+    setTask("");
   };
 
-  const completeTask = () => {
-    
-  }
+  const toggleCompleted = (index) => {
+    const itemsCopy = [...taskItems];
+
+    itemsCopy[index].completed = !itemsCopy[index].completed;
+
+    setTaskItems(itemsCopy);
+  };
 
   const deleteTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   };
-  console.log(taskItems);
+  console.log("ss", taskItems);
   return (
     <View style={style.container}>
       <View>
@@ -36,11 +74,13 @@ export default function Index() {
       </View>
       <View style={style.items}>
         {/*   Opgaver indsættes her */}
-        {taskItems.map((item, index) => (
+        {taskItems.map((item, index, text, completed) => (
           <ToDoTask
             key={index}
-            text={item}
+            text={text}
+            completed={completed}
             deleteTask={() => deleteTask(index)}
+            toggleCompleted={() => toggleCompleted(index)}
           />
         ))}
       </View>
