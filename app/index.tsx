@@ -20,6 +20,7 @@ interface TaskItem {
 export default function Index() {
   const [task, setTask] = useState<string>("");
   const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
+  const [filter, setFilter] = useState<"alle" | "færdig" | "aktive">("alle");
 
   const handleAddTask = () => {
     if (task.trim()) {
@@ -73,14 +74,71 @@ export default function Index() {
     }
   };
 
+  const filteredTasks = taskItems.filter((item) => {
+    if (filter === "færdig") {
+      return item.completed;
+    }
+    if (filter === "aktive") {
+      return !item.completed;
+    }
+    return true; // Den skal vise alle opgaver per default
+  });
+
   return (
     <View style={style.container}>
       <View>
         <Text style={style.h1}>To-do Liste</Text>
       </View>
+      <View style={style.filterWrapper}>
+        <TouchableOpacity
+          style={[style.filterButton, filter === "alle" && style.activeFilter]}
+          onPress={() => setFilter("alle")}
+        >
+          <Text
+            style={[
+              style.filterText,
+              filter === "alle" && style.activeFilterText,
+            ]}
+          >
+            Alle Opgaver
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            style.filterButton,
+            filter === "aktive" && style.activeFilter,
+          ]}
+          onPress={() => setFilter("aktive")}
+        >
+          <Text
+            style={[
+              style.filterText,
+              filter === "aktive" && style.activeFilterText,
+            ]}
+          >
+            Aktive Opgaver
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            style.filterButton,
+            filter === "færdig" && style.activeFilter,
+          ]}
+          onPress={() => setFilter("færdig")}
+        >
+          <Text
+            style={[
+              style.filterText,
+              filter === "færdig" && style.activeFilterText,
+            ]}
+          >
+            Færdige Opgaver
+          </Text>
+        </TouchableOpacity>
+      </View>
       {/* Vis opgaver */}
       <FlatList
-        data={taskItems}
+        data={filteredTasks}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <ToDoTask
@@ -151,4 +209,27 @@ const style = StyleSheet.create({
     borderWidth: 1,
   },
   addTaskText: { color: "#e3e3e3" },
+  filterWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  filterButton: {
+    backgroundColor: "#233142",
+    borderRadius: 10,
+    padding: 5,
+  },
+  filterText: {
+    color: "#e3e3e3",
+  },
+  activeFilter: {
+    backgroundColor: "#e3e3e3",
+    borderRadius: 10,
+    padding: 5,
+  },
+  activeFilterText: {
+    color: "#233142",
+  },
 });
