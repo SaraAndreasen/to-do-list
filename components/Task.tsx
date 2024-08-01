@@ -32,7 +32,7 @@ export const ToDoTask: React.FC<ToDoTaskProps> = ({
         <Text style={style.text}>{text}</Text>
       </View>
       <TouchableOpacity style={style.deleteBtn} onPress={handleDelete}>
-        <Text>Slet</Text>
+        <Text style={style.deleteText}>Slet</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,7 +66,7 @@ const style = StyleSheet.create({
     marginRight: 20,
   },
   deleteBtn: {
-    backgroundColor: "red",
+    backgroundColor: "#233142",
     padding: 10,
     borderRadius: 5,
   },
@@ -80,4 +80,5 @@ const style = StyleSheet.create({
     borderWidth: 2,
     marginRight: 20,
   },
+  deleteText: { color: "#e3e3e3" },
 });
