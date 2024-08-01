@@ -11,6 +11,24 @@ import {
 } from "react-native";
 
 export default function Index() {
+  const [task, setTask] = useState<string>();
+  const [taskItems, setTaskItems] = useState([]);
+
+  const handleAddTask = () => {
+    setTaskItems([...taskItems, task]);
+    setTask(null);
+  };
+
+  const completeTask = () => {
+    
+  }
+
+  const deleteTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+  };
+  console.log(taskItems);
   return (
     <View style={style.container}>
       <View>
@@ -18,9 +36,13 @@ export default function Index() {
       </View>
       <View style={style.items}>
         {/*   Opgaver indsættes her */}
-        <ToDoTask text={"task 1"} />
-        <ToDoTask text={"task 2"} />
-        <ToDoTask text={"task 3"} />
+        {taskItems.map((item, index) => (
+          <ToDoTask
+            key={index}
+            text={item}
+            deleteTask={() => deleteTask(index)}
+          />
+        ))}
       </View>
 
       {/* Lav ny opgave */}
@@ -32,8 +54,10 @@ export default function Index() {
           style={style.input}
           placeholder={"Lav ny opgave..."}
           placeholderTextColor={"#e3e3e3"}
+          onChangeText={(text) => setTask(text)}
+          value={task}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={style.createTaskBtn}>
             <Text style={style.addTaskText}>+</Text>
           </View>
@@ -58,6 +82,7 @@ const style = StyleSheet.create({
     width: 250,
     borderRadius: 20,
     borderWidth: 1,
+    color: "#e3e3e3",
   },
   addTaskWrapper: {
     position: "absolute",

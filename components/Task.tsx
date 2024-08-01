@@ -1,13 +1,20 @@
 import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
 
-export const ToDoTask = (props) => {
+export const ToDoTask = ({ text, index, deleteTask }) => {
+  const handleDelete = () => {
+    deleteTask(index);
+  };
+
+  console.log({ text, index, deleteTask }); // Check individual props
   return (
     <View style={style.container}>
       <View style={style.itemLeft}>
         <View style={style.square}></View>
-        <Text style={style.text}>{props.text}</Text>
+        <Text style={style.text}>{text}</Text>
       </View>
-      <View style={style.checkBox}></View>
+      <TouchableOpacity style={style.deleteBtn} onPress={handleDelete}>
+        <Text>Slet</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -32,16 +39,15 @@ const style = StyleSheet.create({
   square: {
     width: 24,
     height: 24,
-    backgroundColor: "red",
     borderRadius: 5,
+    borderColor: "yellow",
     opacity: 0.5,
+    borderWidth: 2,
     marginRight: 20,
   },
-  checkBox: {
-    width: 12,
-    height: 12,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "white",
+  deleteBtn: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
   },
 });
