@@ -89,6 +89,7 @@ export default function Index() {
       <View>
         <Text style={style.h1}>To-do Liste</Text>
       </View>
+      {/* Filterer opgaver */}
       <View style={style.filterWrapper}>
         <TouchableOpacity
           style={[style.filterButton, filter === "alle" && style.activeFilter]}
