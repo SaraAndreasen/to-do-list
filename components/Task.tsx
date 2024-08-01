@@ -15,7 +15,7 @@ export const ToDoTask = (props) => {
 const style = StyleSheet.create({
   container: {
     backgroundColor: "grey",
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
