@@ -8,12 +8,37 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface TaskItem {
+  text: string;
+  completed: boolean;
+}
+
 export default function Index() {
-  const [task, setTask] = useState<string>();
+  const [task, setTask] = useState<string>("");
   const [taskItems, setTaskItems] = useState<TaskItem[]>([]);
+
+  const handleAddTask = () => {
+    if (task.trim()) {
+      setTaskItems([...taskItems, { text: task, completed: false }]);
+      setTask(""); // Clear the input after adding
+    }
+  };
+
+  const toggleCompleted = (index: number) => {
+    const updatedTasks = taskItems.map((item, idx) =>
+      idx === index ? { ...item, completed: !item.completed } : item
+    );
+    setTaskItems(updatedTasks);
+  };
+
+  const deleteTask = (index: number) => {
+    const updatedTasks = taskItems.filter((_, idx) => idx !== index);
+    setTaskItems(updatedTasks);
+  };
 
   useEffect(() => {
     // Load tasks from storage when the component mounts
@@ -48,43 +73,25 @@ export default function Index() {
     }
   };
 
-  const handleAddTask = () => {
-    setTaskItems([...taskItems, task]);
-    setTask("");
-  };
-
-  const toggleCompleted = (index) => {
-    const itemsCopy = [...taskItems];
-
-    itemsCopy[index].completed = !itemsCopy[index].completed;
-
-    setTaskItems(itemsCopy);
-  };
-
-  const deleteTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
-  };
-  console.log("ss", taskItems);
   return (
     <View style={style.container}>
       <View>
         <Text style={style.h1}>To-do Liste</Text>
       </View>
-      <View style={style.items}>
-        {/*   Opgaver indsættes her */}
-        {taskItems.map((item, index, text, completed) => (
+      {/* Vis opgaver */}
+      <FlatList
+        data={taskItems}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
           <ToDoTask
-            key={index}
-            text={text}
-            completed={completed}
-            deleteTask={() => deleteTask(index)}
-            toggleCompleted={() => toggleCompleted(index)}
+            text={item.text}
+            index={index}
+            completed={item.completed}
+            onDeleteTask={() => deleteTask(index)}
+            onToggleCompleted={() => toggleCompleted(index)}
           />
-        ))}
-      </View>
-
+        )}
+      />
       {/* Lav ny opgave */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

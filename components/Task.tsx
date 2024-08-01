@@ -3,37 +3,31 @@ import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
 interface ToDoTaskProps {
   text: string;
   index: number;
-  deleteTask: (index: number) => void;
-  toggleCompleted: (index: number) => void;
+  onDeleteTask: (index: number) => void;
+  onToggleCompleted: () => void;
   completed: boolean;
 }
 
 export const ToDoTask: React.FC<ToDoTaskProps> = ({
   text,
   index,
-  deleteTask,
-  toggleCompleted,
+  onDeleteTask,
+  onToggleCompleted,
   completed,
 }) => {
   const handleDelete = () => {
-    deleteTask(index);
+    onDeleteTask(index);
   };
 
-  const handleToggleCompleted = () => {
-    toggleCompleted(index);
-  };
-
-  console.log("ehhehehe", text, index, deleteTask, toggleCompleted);
-
-  console.log("Rendering ToDoTask:", { text, completed });
-
-  console.log({ text, index, deleteTask }); // Check individual props
   return (
     <View style={style.container}>
       <View style={style.itemLeft}>
         <TouchableOpacity
-          style={[style.square, completed && style.completedSquare]}
-          onPress={handleToggleCompleted}
+          style={[
+            style.square,
+            completed ? style.completedSquare : style.square,
+          ]}
+          onPress={onToggleCompleted}
         ></TouchableOpacity>
         <Text style={style.text}>{text}</Text>
       </View>
@@ -65,7 +59,8 @@ const style = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 5,
-    borderColor: "yellow",
+    borderColor: "#233142",
+    backgroundColor: "white",
     opacity: 0.5,
     borderWidth: 2,
     marginRight: 20,
@@ -79,7 +74,8 @@ const style = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 5,
-    backgroundColor: "yellow",
+    backgroundColor: "green",
+    borderColor: "green",
     opacity: 0.5,
     borderWidth: 2,
     marginRight: 20,
