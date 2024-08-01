@@ -16,4 +16,4 @@ Dette projekt er lavet med Expo.
     npx expo start
    ```
 
-3. Installer Expo Go på app store. Scan QR koden i terminalen (skulle dukke op efter npm expo start er kørt) for at åbne appen lokalt.
+3. Installer Expo Go på app store. Scan QR koden i terminalen (skulle dukke op efter npm expo start er kørt) for at åbne appen lokalt og så burde den åbne af sig selv i Expo Go.
